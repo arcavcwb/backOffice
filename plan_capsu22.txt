@@ -1,0 +1,20 @@
+**Plano Técnico (Analista) - CAPSU-22: Setup Inicial Completo**
+
+**1. Objetivo:**
+Configurar a base completa do projeto (Frontend e Backend) conforme as regras do stack tecnológico (React + Vite + TypeScript, Supabase, Tailwind, TanStack Query, i18n, Vitest/Playwright).
+
+**2. Passos de Implementação previstos:**
+- **Git:** Inicializar repositório local (`git init`).
+- **Frontend Core:** Inicializar projeto Vite com React e TypeScript no diretório atual.
+- **Estilos:** Instalar e configurar Tailwind CSS (sem bibliotecas de componentes externas).
+- **Estado de Servidor:** Instalar e configurar o TanStack Query.
+- **i18n:** Instalar `react-i18next` e configurar a infraestrutura básica de tradução (pt-BR por padrão).
+- **Testes:** Configurar Vitest (unitários) e inicializar Playwright (E2E).
+- **Limpeza:** Remover arquivos boilerplate do Vite que não usaremos e criar a estrutura inicial de pastas (`src/components`, `src/features`, `src/lib`, `src/pages`, `src/router`, `src/i18n`).
+
+**3. Testes Previstos (Tester):**
+- Validar se o servidor de desenvolvimento (`npm run dev`) inicia sem erros.
+- Executar um teste unitário de exemplo (`npm run test`) para confirmar que o Vitest funciona.
+
+**Aprovação necessária (GATE 1):** 
+@owner, por favor, analise este plano de setup inicial. Como me pediste para revisar bem, percebi que faltava toda a inicialização do frontend antes de poder atacar o CAPSU-1 (Login). Aguardo sua aprovação para começar a instalar e configurar a base do projeto.

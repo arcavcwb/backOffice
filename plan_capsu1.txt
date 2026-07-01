@@ -1,0 +1,19 @@
+**Plano Técnico (Analista) - CAPSU-1: Login**
+
+**1. Objetivo:**
+Implementar o fluxo de autenticação por e-mail e senha utilizando Supabase Auth, protegendo o acesso ao sistema.
+
+**2. Componentes e Arquivos a criar/modificar:**
+- `src/lib/supabase.ts`: Inicialização do cliente Supabase.
+- `src/features/auth/api/login.ts`: Função que chama `supabase.auth.signInWithPassword`.
+- `src/features/auth/hooks/useAuth.ts`: Hook para gerenciar o estado da sessão atual utilizando TanStack Query e as funções do Supabase Auth.
+- `src/pages/Login.tsx`: Interface de usuário com formulário de E-mail e Senha (Tailwind CSS, sem UI libs externas).
+- `src/router/index.tsx`: Configuração do React Router para redirecionar usuários não autenticados para `/login` e usuários autenticados para o painel.
+- `src/i18n/`: Configuração inicial do i18next e criação das chaves de tradução (pt-BR) para os textos do login ("E-mail", "Senha", "Entrar", mensagens de erro), cumprindo a regra de internacionalização.
+
+**3. Testes Previstos (Tester):**
+- Testes unitários (Vitest) para o componente de Login e validação de formato.
+- Teste E2E (Playwright) validando o fluxo de login com sucesso e credenciais inválidas.
+
+**Aprovação necessária (GATE 1):** 
+Por favor, analise este plano técnico. Se estiver de acordo, responda aprovando para que o Implementador inicie a codificação.
