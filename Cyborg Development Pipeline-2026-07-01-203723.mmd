@@ -1,0 +1,56 @@
+---
+config:
+  layout: dagre
+---
+flowchart TB
+ subgraph FaseZero["Fase Zero: Discovery & Viabilidade"]
+        PRD["PRD & Regras"]
+        Est["Estimativa de Pontos"]
+        Viab{"É Viável?"}
+  end
+ subgraph Sprints["Ciclo Cyborg de Desenvolvimento"]
+        Ana["Agente Analista"]
+        Backlog[("Planned Backlog")]
+        G1{"Gate 1: Aprovação do Plano"}
+        Imp["Agente Implementador"]
+        Sub["Sub-agente Isolado"]
+        Script["Scripts Bash / Boilerplate"]
+        Test["Agente Tester"]
+        Rev["Agente Reviewer"]
+        G2{"Gate 2: Aprovação de PR"}
+  end
+    PRD --> Est
+    Est --> Viab
+    PO(["Product Owner / Tech Lead"]) -- Analisa --> Viab
+    Viab -- Não --> Descarte["Descarte do Projeto"]
+    Viab -- Sim --> Backlog
+    Backlog -- Puxa Ticket --> Ana
+    Ana -- Plano Técnico --> G1
+    G1 -- Reprova --> Ana
+    G1 -- Aprova --> Imp
+    Imp -. Contexto Limpo .-> Sub
+    Sub -. "Zero-Token" .-> Script
+    Script --> Test
+    Test -- Verifica RLS & E2E --> Rev
+    Rev -- Prepara Code/PR --> G2
+    PO -- Aprova Plano --> G1
+    PO -- Aprova PR --> G2
+    G2 -- Reprova --> Imp
+    G2 -- Aprova & Merge --> Done(["Produção / Feito"])
+
+     Viab:::decisao
+     Ana:::agente
+     G1:::decisao
+     Imp:::agente
+     Sub:::agente
+     Script:::processo
+     Test:::agente
+     Rev:::agente
+     G2:::decisao
+     PO:::humano
+     Done:::output
+    classDef humano stroke:#f97316,fill:#fed7aa
+    classDef agente stroke:#3b82f6,fill:#dbeafe
+    classDef decisao stroke:#eab308,fill:#fef08a
+    classDef processo stroke:#10b981,fill:#d1fae5
+    classDef output stroke:#8b5cf6,fill:#ede9fe
