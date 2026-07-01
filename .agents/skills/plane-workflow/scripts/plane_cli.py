@@ -42,7 +42,7 @@ def list_issues(state=None):
     states_inv = {v: k for k, v in get_states().items()}
     
     for i in issues:
-        s_name = states_inv.get(i.get('state_id'), 'unknown')
+        s_name = states_inv.get(i.get('state'), 'unknown')
         if state and s_name.lower() != state.lower():
             continue
         print(f"CAPSU-{i['sequence_id']} | State: {s_name.upper()} | {i['name']}")
@@ -56,7 +56,7 @@ def update_issue_state(identifier, state_name):
         return
         
     url = f"{BASE_URL}/issues/{issue_id}/"
-    resp = requests.patch(url, headers=HEADERS, json={"state_id": state_id})
+    resp = requests.patch(url, headers=HEADERS, json={"state": state_id})
     resp.raise_for_status()
     print(f"Issue CAPSU-{identifier.replace('CAPSU-', '')} state updated to '{state_name}'.")
 
@@ -76,7 +76,7 @@ def get_issue(identifier):
     resp.raise_for_status()
     i = resp.json()
     states_inv = {v: k for k, v in get_states().items()}
-    s_name = states_inv.get(i.get('state_id'), 'unknown')
+    s_name = states_inv.get(i.get('state'), 'unknown')
     
     print(f"ID: CAPSU-{i['sequence_id']}")
     print(f"Title: {i['name']}")
