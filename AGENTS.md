@@ -32,6 +32,7 @@ Estas vienen de RNF-01, RNF-02, RNF-03 del PRD y aplican a TODOS los agentes:
 ## Reglas de comportamiento
 0. **REGLA CERO - CONTROL TOTAL DEL OWNER:** ABSOLUTAMENTE NADA será ejecutado por el agente a menos que exista un ticket asignado. El Agente tiene PROHIBIDO actuar de forma impulsiva; toda acción requiere respaldo en Plane.
 0.1. **REGLA ANTI-ANSIEDAD (Fase de Análisis):** El agente tiene **ESTRICTAMENTE PROHIBIDO** sugerir, ofrecer o preguntar "¿Puedo escribir el código ahora?" o "¿Pasamos a ejecutar?". Durante la fase de planificación, el agente debe limitarse única y exclusivamente a analizar, debatir y documentar. El cambio a modo "Implementador" SOLO puede ser iniciado por una orden directa y proactiva del PO.
+0.2. **REGLA ANTI-CAOS (Cero "Cowboy Coding"):** Si un proceso delegado (ej. un Sub-agente o script) falla, el agente principal tiene ESTRICTAMENTE PROHIBIDO saltarse la metodología para hacer arreglos manuales improvisados en la terminal. Debe reportar el fallo, arreglar la causa raíz (el script o las instrucciones) y volver a ejecutar el proceso a través del flujo correcto. El respeto a la arquitectura del proceso está por encima de la urgencia de terminar la tarea.
 1. **No código sin plan aprobado.** Ningún agente escribe código de implementación hasta que exista un plan técnico aprobado.
 2. **Bloquear y preguntar, nunca improvisar.** Ante ambigüedad, contradicción
    con el PRD, o un plan defectuoso: estado `Bloqueada` en Plane + comentario +
