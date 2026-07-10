@@ -16,6 +16,7 @@ import { ResetPasswordForm } from './components/ResetPasswordForm'
 import { CreateTenantForm } from './components/CreateTenantForm'
 import { EditTenantForm } from './components/EditTenantForm'
 import { TenantsListPage } from './components/TenantsListPage'
+import { UsersListPage } from './components/UsersListPage'
 import { useAuth } from './hooks/useAuth'
 
 const queryClient = new QueryClient()
@@ -94,7 +95,22 @@ const tenantsListRoute = createRoute({
   component: TenantsListPage,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, loginRoute, forgotPasswordRoute, resetPasswordRoute, createTenantRoute, editTenantRoute, tenantsListRoute])
+const usersListRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/users',
+  component: UsersListPage,
+})
+
+const routeTree = rootRoute.addChildren([
+  indexRoute, 
+  loginRoute, 
+  forgotPasswordRoute, 
+  resetPasswordRoute, 
+  createTenantRoute, 
+  editTenantRoute, 
+  tenantsListRoute,
+  usersListRoute
+])
 
 const router = createRouter({ routeTree })
 
