@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
+import { useAuth } from '../hooks/useAuth';
 
 type TenantUser = {
   id: string;
@@ -15,6 +16,7 @@ export function UsersListPage() {
   const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('User');
+  const { user } = useAuth();
 
   const { data: users, isLoading, error } = useQuery<TenantUser[]>({
     queryKey: ['tenant_users'],
@@ -39,6 +41,20 @@ export function UsersListPage() {
       setIsInviteModalOpen(false);
       setInviteEmail('');
       setInviteRole('User');
+    }
+  });
+
+  const updateUserMutation = useMutation({
+    mutationFn: async ({ id, role, status }: { id: string; role: string; status: string }) => {
+      const { error } = await supabase.rpc('update_tenant_user', {
+        p_user_id: id,
+        p_role: role,
+        p_status: status
+      });
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tenant_users'] });
     }
   });
 
@@ -101,6 +117,9 @@ export function UsersListPage() {
                   <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                     Data de Criação
                   </th>
+                  <th scope="col" className="px-6 py-4 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                    Ações
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700/50">
@@ -129,11 +148,38 @@ export function UsersListPage() {
                     <td className="px-6 py-5 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                       {new Date(u.created_at).toLocaleDateString()}
                     </td>
+                    <td className="px-6 py-5 whitespace-nowrap text-right text-sm font-medium">
+                      {user?.id !== u.id && (
+                        <div className="flex justify-end gap-2">
+                          <select
+                            value={u.role}
+                            onChange={(e) => updateUserMutation.mutate({ id: u.id, role: e.target.value, status: u.status })}
+                            disabled={updateUserMutation.isPending}
+                            className="text-xs border-gray-300 dark:border-gray-600 rounded shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:text-white"
+                          >
+                            <option value="User">Usuário</option>
+                            <option value="Approver">Aprovador</option>
+                            <option value="Tenant-Admin">Admin</option>
+                          </select>
+                          <button
+                            onClick={() => updateUserMutation.mutate({ id: u.id, role: u.role, status: u.status === 'suspended' ? 'active' : 'suspended' })}
+                            disabled={updateUserMutation.isPending}
+                            className={`px-3 py-1 rounded text-xs font-medium border transition-colors ${
+                              u.status === 'suspended'
+                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100 dark:bg-emerald-900/30 dark:text-emerald-400 dark:border-emerald-800 dark:hover:bg-emerald-900/50'
+                                : 'bg-red-50 text-red-700 border-red-200 hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400 dark:border-red-800 dark:hover:bg-red-900/50'
+                            }`}
+                          >
+                            {u.status === 'suspended' ? 'Reativar' : 'Suspender'}
+                          </button>
+                        </div>
+                      )}
+                    </td>
                   </tr>
                 ))}
                 {users?.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400 flex-col items-center justify-center">
+                    <td colSpan={5} className="px-6 py-12 text-center text-gray-500 dark:text-gray-400 flex-col items-center justify-center">
                       <div className="text-lg font-medium text-gray-900 dark:text-gray-200 mb-1">Nenhum usuário encontrado</div>
                     </td>
                   </tr>
