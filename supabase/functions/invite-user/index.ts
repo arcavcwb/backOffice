@@ -51,6 +51,8 @@ serve(async (req) => {
         tenant_id: callerTenantId,
         role: role
       }
+    }, {
+      redirectTo: req.headers.get('origin') ? `${req.headers.get('origin')}/accept-invite` : 'http://localhost:5173/accept-invite'
     })
 
     if (error) {
