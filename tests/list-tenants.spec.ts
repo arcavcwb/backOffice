@@ -51,4 +51,57 @@ test.describe('List Tenants Flow', () => {
 
     await expect(page.locator('text=Nenhum tenant encontrado')).toBeVisible();
   });
+
+  test('deve permitir suspender e reativar um tenant', async ({ page }) => {
+    let isSuspended = false;
+
+    // Intercepta requisições para tenants
+    await page.route('**/rest/v1/tenants*', async (route) => {
+      if (route.request().method() === 'GET') {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify([
+            {
+              id: 'uuid-toggle',
+              name: 'Empresa Teste Toggle',
+              status: isSuspended ? 'suspended' : 'active',
+              created_at: new Date().toISOString()
+            }
+          ])
+        });
+      } else if (route.request().method() === 'PATCH') {
+        const postData = JSON.parse(route.request().postData() || '{}');
+        if (postData.status === 'suspended') {
+          isSuspended = true;
+        } else if (postData.status === 'active') {
+          isSuspended = false;
+        }
+        await route.fulfill({ status: 204 }); // Supabase update returns 204 typically or 200 depending on select
+      } else {
+        await route.continue();
+      }
+    });
+
+    await page.goto('/admin/tenants');
+
+    // Estado Inicial Ativo
+    await expect(page.locator('text=Ativo')).toBeVisible();
+    
+    // Clica em Suspender
+    const btnSuspender = page.locator('button:has-text("Suspender")');
+    await expect(btnSuspender).toBeVisible();
+    await btnSuspender.click();
+
+    // Deve atualizar a UI para Suspenso e mostrar botão Reativar
+    await expect(page.locator('text=Suspenso')).toBeVisible();
+    const btnReativar = page.locator('button:has-text("Reativar")');
+    await expect(btnReativar).toBeVisible();
+
+    // Clica em Reativar
+    await btnReativar.click();
+
+    // Deve atualizar a UI para Ativo novamente
+    await expect(page.locator('text=Ativo')).toBeVisible();
+  });
 });

@@ -1,8 +1,28 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 import { Link } from '@tanstack/react-router';
 
 export function TenantsListPage() {
+  const queryClient = useQueryClient();
+
+  const toggleStatusMutation = useMutation({
+    mutationFn: async ({ id, newStatus }: { id: string; newStatus: 'active' | 'suspended' }) => {
+      const { error } = await supabase
+        .from('tenants')
+        .update({ status: newStatus, updated_at: new Date().toISOString() })
+        .eq('id', id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['tenants'] });
+    }
+  });
+
+  const handleToggleStatus = (id: string, currentStatus: string) => {
+    const newStatus = currentStatus === 'active' ? 'suspended' : 'active';
+    toggleStatusMutation.mutate({ id, newStatus });
+  };
+
   const { data: tenants, isLoading, error } = useQuery({
     queryKey: ['tenants'],
     queryFn: async () => {
@@ -90,7 +110,18 @@ export function TenantsListPage() {
                       {new Date(tenant.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-5 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <div className="flex justify-end gap-4 opacity-0 group-hover:opacity-100 transition-opacity items-center">
+                        <button
+                          onClick={() => handleToggleStatus(tenant.id, tenant.status)}
+                          disabled={toggleStatusMutation.isPending}
+                          className={`font-semibold disabled:opacity-50 ${
+                            tenant.status === 'active' 
+                              ? 'text-rose-600 hover:text-rose-800 dark:text-rose-400 dark:hover:text-rose-300'
+                              : 'text-emerald-600 hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300'
+                          }`}
+                        >
+                          {tenant.status === 'active' ? 'Suspender' : 'Reativar'}
+                        </button>
                         <Link
                           to="/admin/tenants/$tenantId/edit"
                           params={{ tenantId: tenant.id }}
