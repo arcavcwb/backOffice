@@ -17,6 +17,7 @@ import { CreateTenantForm } from './components/CreateTenantForm'
 import { EditTenantForm } from './components/EditTenantForm'
 import { TenantsListPage } from './components/TenantsListPage'
 import { UsersListPage } from './components/UsersListPage'
+import { AcceptInviteForm } from './components/AcceptInviteForm'
 import { useAuth } from './hooks/useAuth'
 
 const queryClient = new QueryClient()
@@ -101,11 +102,18 @@ const usersListRoute = createRoute({
   component: UsersListPage,
 })
 
+const acceptInviteRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/accept-invite',
+  component: AcceptInviteForm,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute, 
   loginRoute, 
   forgotPasswordRoute, 
   resetPasswordRoute, 
+  acceptInviteRoute,
   createTenantRoute, 
   editTenantRoute, 
   tenantsListRoute,

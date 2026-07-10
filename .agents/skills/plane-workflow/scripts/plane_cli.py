@@ -69,6 +69,19 @@ def add_comment(identifier, comment):
     else:
         print(f"Failed: {resp.text}")
 
+def create_issue(title, description=""):
+    url = f"{BASE_URL}/issues/"
+    payload = {"name": title}
+    if description:
+        payload["description_html"] = f"<p>{description}</p>"
+        
+    resp = requests.post(url, headers=HEADERS, json=payload)
+    if resp.status_code in (200, 201):
+        i = resp.json()
+        print(f"Created issue CAPSU-{i.get('sequence_id')} successfully.")
+    else:
+        print(f"Failed to create issue: {resp.text}")
+
 def get_issue(identifier):
     issue_id = get_issue_uuid(identifier)
     url = f"{BASE_URL}/issues/{issue_id}/"
@@ -88,6 +101,10 @@ def get_issue(identifier):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Plane CLI for Project BackOffice-Multitenant")
     subparsers = parser.add_subparsers(dest="command")
+
+    create_p = subparsers.add_parser("create")
+    create_p.add_argument("title", help="Title of the issue")
+    create_p.add_argument("--desc", help="Description of the issue", default="")
 
     list_p = subparsers.add_parser("list")
     list_p.add_argument("--state", help="Filter by state name")
@@ -113,5 +130,7 @@ if __name__ == "__main__":
         update_issue_state(args.identifier, args.state_name)
     elif args.command == "comment":
         add_comment(args.identifier, args.text)
+    elif args.command == "create":
+        create_issue(args.title, args.desc)
     else:
         parser.print_help()
