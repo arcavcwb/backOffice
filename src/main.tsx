@@ -13,6 +13,7 @@ import App from './App.tsx'
 import { LoginForm } from './components/LoginForm'
 import { ForgotPasswordForm } from './components/ForgotPasswordForm'
 import { ResetPasswordForm } from './components/ResetPasswordForm'
+import { CreateTenantForm } from './components/CreateTenantForm'
 import { useAuth } from './hooks/useAuth'
 
 const queryClient = new QueryClient()
@@ -70,7 +71,13 @@ const resetPasswordRoute = createRoute({
   component: ResetPasswordForm,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, loginRoute, forgotPasswordRoute, resetPasswordRoute])
+const createTenantRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin/tenants/new',
+  component: CreateTenantForm,
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, loginRoute, forgotPasswordRoute, resetPasswordRoute, createTenantRoute])
 
 const router = createRouter({ routeTree })
 
