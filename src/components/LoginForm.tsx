@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, Link } from '@tanstack/react-router';
 
 export function LoginForm() {
   const [email, setEmail] = useState('');
@@ -65,6 +65,15 @@ export function LoginForm() {
               />
             </div>
           </div>
+
+          <div className="flex items-center justify-end">
+            <div className="text-sm">
+              <Link to="/forgot-password" className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400">
+                Esqueceu sua senha?
+              </Link>
+            </div>
+          </div>
+
 
           {loginError && (
             <div className="text-red-500 text-sm text-center bg-red-50 dark:bg-red-900/30 p-2 rounded-md">

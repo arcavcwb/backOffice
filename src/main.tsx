@@ -11,6 +11,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import './index.css'
 import App from './App.tsx'
 import { LoginForm } from './components/LoginForm'
+import { ForgotPasswordForm } from './components/ForgotPasswordForm'
+import { ResetPasswordForm } from './components/ResetPasswordForm'
 import { useAuth } from './hooks/useAuth'
 
 const queryClient = new QueryClient()
@@ -56,7 +58,19 @@ const loginRoute = createRoute({
   component: LoginForm,
 })
 
-const routeTree = rootRoute.addChildren([indexRoute, loginRoute])
+const forgotPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/forgot-password',
+  component: ForgotPasswordForm,
+})
+
+const resetPasswordRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/reset-password',
+  component: ResetPasswordForm,
+})
+
+const routeTree = rootRoute.addChildren([indexRoute, loginRoute, forgotPasswordRoute, resetPasswordRoute])
 
 const router = createRouter({ routeTree })
 
