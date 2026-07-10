@@ -13,6 +13,6 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
-    include: ['src/**/*.spec.tsx', 'src/**/*.spec.ts', 'tests/rls.spec.ts']
+    include: ['src/**/*.spec.tsx', 'src/**/*.spec.ts', 'tests/rls.spec.ts', 'tests/cross-tenant-isolation.test.ts']
   }
 })
